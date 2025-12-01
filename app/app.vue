@@ -1,6 +1,18 @@
+<script lang="ts" setup>
+const handleMessage = () => {
+  message.info("This is a normal message");
+}
+</script>
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <a-config-provider
+    :theme="{
+      token: {
+        colorPrimary: '#ea6f5a',
+      },
+    }"
+  >
+      <a-button @click="handleMessage" type="primary">
+        button
+      </a-button>
+  </a-config-provider>
 </template>
