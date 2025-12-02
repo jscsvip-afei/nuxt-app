@@ -14,5 +14,6 @@ const handleMessage = () => {
       <a-button @click="handleMessage" type="primary">
         首页
       </a-button>
+      <hello-world msg="Welcome to the Home Page!" />
   </a-config-provider>
 </template>
