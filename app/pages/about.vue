@@ -14,5 +14,6 @@ const handleMessage = () => {
       <a-button @click="handleMessage" type="primary">
         关于
       </a-button>
+      <nuxt-link to="/">返回首页</nuxt-link>
   </a-config-provider>
 </template>
