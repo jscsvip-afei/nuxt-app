@@ -1,4 +1,14 @@
 <script lang="ts" setup>
+// 设置具名中间件
+definePageMeta({
+  title: '关于页面',
+  meta: [
+    { name: 'keywords', content: '关于,about' },
+    { name: 'description', content: '这是关于页面的描述' }
+  ],
+  middleware: 'auth'
+});
+
 const handleMessage = () => {
   message.info("This is a normal message");
 }

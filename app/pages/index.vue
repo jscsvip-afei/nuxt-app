@@ -21,6 +21,21 @@ const toAbout2 = () => {
     }
   });
 }
+// 登录逻辑
+const isLogin = ref(false);
+onMounted(() => {
+  isLogin.value = sessionStorage.getItem("userInfo") ? true : false;
+});
+
+const login = () => {
+  navigateTo('/login');
+}
+const logout = () => {
+  sessionStorage.removeItem("userInfo");
+  isLogin.value = false;
+  message.success("已退出登录");
+}
+
 </script>
 <template>
   <a-config-provider
@@ -33,6 +48,11 @@ const toAbout2 = () => {
       <a-button @click="handleMessage" type="primary">
         首页
       </a-button>
+      <!-- 登录逻辑 -->
+      <a-button @click="login" v-if="!isLogin">登录</a-button>
+      <a-button @click="logout" v-else>退出登录</a-button>
+
+
       <hello-world msg="Welcome to the Home Page!" />
       <nuxt-link to="/about">关于</nuxt-link> <br />
       <nuxt-link to="/parent">父级</nuxt-link><br />
