@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia';
 
 export const useMyStore = defineStore('myStore', {
-
   state: () => ({
     
     likeCount: 0
@@ -14,5 +13,7 @@ export const useMyStore = defineStore('myStore', {
     add(){
       this.likeCount++;
     }
+  },
+    persist: true,
   }
-})
+)
