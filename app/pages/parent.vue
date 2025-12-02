@@ -1,6 +1,11 @@
 <template>
   <h1>Parent Page</h1>
   <NuxtPage />
+  <h2>使用插件</h2>
+  <p>{{ $myPluginMethod('World') }}</p>
+  <a-button @click="handleMessage" type="primary">
+    父级页面按钮
+  </a-button>
 </template>
 <script setup>
 // 匿名中间件
@@ -20,4 +25,8 @@ definePageMeta({
 
   })
 });
+const {$message} = useNuxtApp()
+const handleMessage = () => {
+  $message.info("This is a normal message from parent page");
+}
 </script>
