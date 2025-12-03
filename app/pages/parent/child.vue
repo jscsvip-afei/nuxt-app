@@ -4,6 +4,8 @@
     <!--  -->
     useFetch 组合式 API 示例：
   </div>
+  <pre>{{ userData }}</pre>
+
 </template>
 
 <script setup>
@@ -17,4 +19,9 @@ console.log("Fetched data:", data.value);
 // 使用自定义的 useHttpFetch 组合式函数
 const {data: userInfoData} = await userInfoFetch();
 console.log("userInfoFetch data:", userInfoData.value);
+
+// 调用 server API 路由
+const { data: userData } = await useFetch('/api/user')
+console.log("userData:", userData.value);
+
 </script>
