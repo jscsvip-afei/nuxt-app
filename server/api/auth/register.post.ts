@@ -5,65 +5,57 @@
  * 4. 判断账号是否注册
  * 5. 创建账号
  */
-import Joi from 'joi';
-import md5 from 'md5'
+import Joi from "joi";
+import md5 from "md5";
+import { responseJson } from "~~/server/utils/helper";
 export default defineEventHandler(async (event) => {
   // 获取数据
   const body = await readBody(event);
-  console.log('body', body);
+  console.log("body", body);
   // 校验joi数据
-  
+
   const schema = Joi.object({
     nickname: Joi.string().required(),
     password: Joi.string().required(),
     phone: Joi.string().pattern(/^1[3-9]\d{9}$/),
-  })
+  });
   try {
-      const value = await schema.validateAsync(body);
-  }
-  catch (err) { 
-    return {
-      code:1,
-      msg: '数据格式错误',
-      data:{}
-    }
+    const value = await schema.validateAsync(body);
+  } catch (err) {
+    return responseJson(1, "数据格式错误", {});
   }
 
-  
   // md5密码加密
-  let salt = 'jianshu2024_'
+  let salt = "jianshu2024_";
   const password = md5(md5(body.password) + salt);
 
-  // 查询数据库
+  // 数据库操作
   try {
-  } catch (error) {
-    return {
-      code:1,
-      msg: '服务器错误',
-      data:{}
-    }}
-     
-  const [row] = await getDB().query('SELECT id FROM `users` WHERE phone = ?', [body.phone]);
-  console.log('row', row);
-  // 判断账号是否注册
-  if((row as any).length > 0) {
-    return {
-      code:1,
-      msg: '该手机号已注册',
-      data:{}
-    }
-  }else{
-    // 创建账号
-    const [insertRes] = await getDB().query('INSERT INTO `users` (nickname, password, phone) VALUES (?, ?, ?)', [body.nickname, password, body.phone]);
-    console.log('insertRes', insertRes);
-    return {
-      code:0,
-      msg: '注册成功',
-      data:{
-        id: (insertRes as any).insertId,
-        nickname: body.nickname,
-        phone: body.phone
+    // 查询数据库
+    const [row] = await getDB().query(
+      "SELECT id FROM `users` WHERE phone = ?",
+      [body.phone]
+    );
+    console.log("row", row);
+    // 判断账号是否注册
+    if ((row as any).length > 0) {
+      return responseJson(1, "该手机号已注册", {});
+    } else {
+      // 创建账号
+      const [insertRes] = await getDB().query(
+        "INSERT INTO `users` (nickname, password, phone) VALUES (?, ?, ?)",
+        [body.nickname, password, body.phone]
+      );
+      console.log("insertRes", insertRes);
+      if ((insertRes as any).affectedRows === 1) {
+        return responseJson(0, "注册成功", {
+          id: (insertRes as any).insertId,
+          nickname: body.nickname,
+          phone: body.phone,
+        });
       }
     }
-  } 
-})
+  } catch (error) {
+    return responseJson(1, "服务器错误", {});
+  }
+});
