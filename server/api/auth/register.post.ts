@@ -28,11 +28,14 @@ export default defineEventHandler(async (event) => {
   // md5密码加密
   let salt = "jianshu2024_";
   const password = md5(md5(body.password) + salt);
-
+  
+  let con;
   // 数据库操作
   try {
+    con = await getDB().getConnection();
+    
     // 查询数据库
-    const [row] = await getDB().query(
+    const [row] = await con.query(
       "SELECT id FROM `users` WHERE phone = ?",
       [body.phone]
     );
@@ -40,22 +43,29 @@ export default defineEventHandler(async (event) => {
     // 判断账号是否注册
     if ((row as any).length > 0) {
       return responseJson(1, "该手机号已注册", {});
-    } else {
-      // 创建账号
-      const [insertRes] = await getDB().query(
-        "INSERT INTO `users` (nickname, password, phone) VALUES (?, ?, ?)",
-        [body.nickname, password, body.phone]
-      );
-      console.log("insertRes", insertRes);
-      if ((insertRes as any).affectedRows === 1) {
-        return responseJson(0, "注册成功", {
-          id: (insertRes as any).insertId,
-          nickname: body.nickname,
-          phone: body.phone,
-        });
-      }
+    }
+    
+    // 创建账号
+    const [insertRes] = await con.query(
+      "INSERT INTO `users` (nickname, password, phone) VALUES (?, ?, ?)",
+      [body.nickname, password, body.phone]
+    );
+    console.log("insertRes", insertRes);
+    
+    if ((insertRes as any).affectedRows === 1) {
+      return responseJson(0, "注册成功", {
+        id: (insertRes as any).insertId,
+        nickname: body.nickname,
+        phone: body.phone,
+      });
     }
   } catch (error) {
+    console.error("数据库错误:", error);
     return responseJson(1, "服务器错误", {});
+  } finally {
+    // 确保连接被释放
+    if (con) {
+      con.release();
+    }
   }
 });
