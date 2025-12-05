@@ -1,4 +1,4 @@
 
-getDB().getConnection().then(connection => {
-  console.log("Database connection successful");
-})
+// getDB().getConnection().then(connection => {
+//   console.log("Database connection successful");
+// })
