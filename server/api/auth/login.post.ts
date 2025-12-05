@@ -66,6 +66,7 @@ export default defineEventHandler(async (event) => {
     });
   } catch (error) {
     console.error("数据库错误:", error);
+    setResponseStatus(event, 500);
     return responseJson(1, "服务器错误", {});
   } finally {
     // 确保连接被释放
