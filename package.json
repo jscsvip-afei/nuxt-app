@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design-vue/nuxt": "1.4.6",
     "@pinia/nuxt": "0.11.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "ant-design-vue": ">=4",
     "joi": "^18.0.2",
     "jsonwebtoken": "^9.0.2",
