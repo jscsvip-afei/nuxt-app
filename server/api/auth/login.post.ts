@@ -8,7 +8,7 @@
 import Joi from "joi";
 import md5 from "md5";
 import { responseJson } from "~~/server/utils/helper";
-
+import jwt from "jsonwebtoken";
 
 export default defineEventHandler(async (event) => {
   // 获取数据
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     
     // 查询数据库
     const [row] = await con.query(
-      "SELECT id FROM `users` WHERE phone = ? AND password = ?",
+      "SELECT * FROM `users` WHERE phone = ? AND password = ?",
       [body.phone, password]
     );
     console.log("row", row);
@@ -47,7 +47,23 @@ export default defineEventHandler(async (event) => {
     }
     
     // 生成token
+    let secret = "jianshu2024_secret";
+    const token = jwt.sign(
+      {
+        uid: (row as any)[0].id,
+        phone: body.phone,
+      },
+      secret,
+      { expiresIn: "7d" }
+    );
 
+    return responseJson(0, "登录成功", { 
+      accessToken:token,
+      userInfo:{
+        nickname: (row as any)[0].nickname,
+        phone: (row as any)[0].phone,
+      } 
+    });
   } catch (error) {
     console.error("数据库错误:", error);
     return responseJson(1, "服务器错误", {});
