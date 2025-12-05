@@ -1,9 +1,10 @@
 /**
  * 1. 判断用户是否登录
- * 2. 已登录创建文集
- * 
+ * 2. 已登录修改文集
+ *  *
  * 
  */
+
 
 import Joi from "joi";
 export default defineEventHandler(async (event) => {
@@ -14,12 +15,13 @@ export default defineEventHandler(async (event) => {
     return responseJson(1, "用户未登录", {});
   }
   // 获取数据
-  const body = await readBody(event);
+  const body = await readBody(event);   
   console.log("body", body);
   // 校验joi数据
-
+  
   const schema = Joi.object({
     name: Joi.string().required(),
+    id: Joi.number().required(),
   });
   try {
     const value = await schema.validateAsync(body);
@@ -29,19 +31,18 @@ export default defineEventHandler(async (event) => {
 
   let con;
   // 数据库操作
-  try {
+  try {     
     con = await getDB().getConnection();
     
-    // 创建账号
-    const [insertRes] = await con.query(
-      "INSERT INTO `notebooks` (name,uid) VALUES (?, ?)",
-      [body.name,uid]
+    // 修改文集
+    const [updateRes] = await con.query(
+      "UPDATE `notebooks` SET name = ? WHERE id = ? AND uid = ?",
+      [body.name, body.id, uid]
     );
-    console.log("insertRes", insertRes);
+    console.log("updateRes", updateRes);
     
-    if ((insertRes as any).affectedRows === 1) {
-      return responseJson(0, "创建文集成功", {
-
+    if ((updateRes as any).affectedRows === 1) {
+      return responseJson(0, "修改文集成功", {
       });
     }
   } catch (error) {
