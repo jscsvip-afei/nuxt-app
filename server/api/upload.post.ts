@@ -29,6 +29,12 @@ export default defineEventHandler(async (event) => {
   // 图片路径
   const filePath = path.join(process.cwd(), 'public', 'img', fileName);
 
+  // 确保目录存在
+  const dirPath = path.dirname(filePath);
+  if (!fs.existsSync(dirPath)) {
+    await fs.promises.mkdir(dirPath, { recursive: true });
+  }
+
   // 写入文件
   try {
     await fs.promises.writeFile(filePath, file.data);
