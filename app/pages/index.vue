@@ -52,6 +52,7 @@ const logout = () => {
       <a-button @click="login" v-if="!isLogin">登录</a-button>
       <a-button @click="logout" v-else>退出登录</a-button>
 
+      <Icon name="uil:github" />
 
       <hello-world msg="Welcome to the Home Page!" />
       <nuxt-link to="/about">关于</nuxt-link> <br />
