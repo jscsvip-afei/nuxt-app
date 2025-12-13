@@ -16,7 +16,7 @@ export const useHttpFetch = (url: string, options: myFetchOptions = {}) => {
   // 发起请求
   return useFetch(url, {
     ...options,
-    baseURL: '', // 设置基础URL
+    baseURL: 'http://localhost:3000/', // 设置基础URL
     // 拦截器
     onRequest ({ request, options }) {
       // Process the request before sending
@@ -44,3 +44,6 @@ export const useHttpFetch = (url: string, options: myFetchOptions = {}) => {
 export const userInfoFetch = (opt: myFetchOptions = {}) => {
   return useHttpFetch('/api/user/info',opt);
 }
+
+// 注册接口
+
